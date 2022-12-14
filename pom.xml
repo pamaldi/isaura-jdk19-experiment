@@ -12,6 +12,16 @@
 
     </properties>
 
+    <dependencies>
+        <!-- https://mvnrepository.com/artifact/io.reactivex.rxjava3/rxjava -->
+        <dependency>
+            <groupId>io.reactivex.rxjava3</groupId>
+            <artifactId>rxjava</artifactId>
+            <version>3.1.5</version>
+        </dependency>
+
+    </dependencies>
+
 
     <build>
         <plugins>
@@ -22,10 +32,7 @@
                 <configuration>
                     <source>19</source>
                     <target>19</target>
-                    <compilerArgs>
-                        <arg>--enable-preview</arg>
-                        <arg>--add-modules=jdk.incubator.concurrent</arg>
-                        <arg>--add-exports</arg>
+                    <compilerArgs>--enable-preview
                         <arg>java.base/jdk.internal.vm=ALL-UNNAMED</arg>
                     </compilerArgs>
                 </configuration>
