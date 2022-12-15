@@ -1,6 +1,7 @@
 package cloud.isaura.experimental.cellularautomata.simple;
 
 import cloud.isaura.experimental.cellularautomata.simple.gui.CaGui;
+import cloud.isaura.experimental.cellularautomata.simple.gui.CaGuiImproved;
 import cloud.isaura.experimental.cellularautomata.simple.model.BoardGuiConfiguration;
 import cloud.isaura.experimental.cellularautomata.simple.utils.Constants;
 
@@ -13,18 +14,13 @@ public class SimpleCAMain extends JPanel
     public static void main(String[] args)
     {
         BoardGuiConfiguration boardGuiConfiguration = new BoardGuiConfiguration(Constants.boardRows, Constants.boardColumns);
-        SwingUtilities.invokeLater(new Runnable()
-        {
-            public void run()
-            {
-                createAndShowGUI(boardGuiConfiguration);
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new CaGuiImproved(boardGuiConfiguration).setVisible(true);
             }
         });
 
     }
 
-    private static void createAndShowGUI(BoardGuiConfiguration boardGuiConfiguration)
-    {
-        new CaGui(boardGuiConfiguration);
-    }
+
 }

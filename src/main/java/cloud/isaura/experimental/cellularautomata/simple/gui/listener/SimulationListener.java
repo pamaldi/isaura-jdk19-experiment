@@ -1,7 +1,9 @@
 package cloud.isaura.experimental.cellularautomata.simple.gui.listener;
 
 import cloud.isaura.experimental.cellularautomata.simple.gui.CaGui;
+import cloud.isaura.experimental.cellularautomata.simple.gui.CaGuiImproved;
 import cloud.isaura.experimental.cellularautomata.simple.gui.worker.MainSimulationWorker;
+import cloud.isaura.experimental.cellularautomata.simple.model.Ruleset;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -10,9 +12,9 @@ public class SimulationListener implements ActionListener
 {
     private MainSimulationWorker mainSimulationWorker;
 
-    private CaGui gui;
+    private CaGuiImproved gui;
 
-    public SimulationListener(CaGui gui)
+    public SimulationListener(CaGuiImproved gui)
     {
         this.gui = gui;
     }
@@ -35,6 +37,7 @@ public class SimulationListener implements ActionListener
         String command = e.getActionCommand();
         if (command == "start")
         {
+            System.out.println("Selected "+this.gui.getSelected());
             startSimulation();
         }else if (command == "clear")
         {

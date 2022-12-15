@@ -54,7 +54,7 @@ public class Board
         final Cell[] row = this.cells[i];
         for (int j = 0; j < row.length; j++)
         {
-            System.out.println(row[j]);
+            //System.out.println(row[j]);
         }
     }
 
@@ -70,7 +70,7 @@ public class Board
         for (int i = 0; i < this.cells.length; i++)
         {
 
-            System.out.println(getRowAsAString(i));
+            //System.out.println(getRowAsAString(i));
         }
 
     }

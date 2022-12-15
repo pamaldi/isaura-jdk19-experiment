@@ -2,6 +2,7 @@ package cloud.isaura.experimental.cellularautomata.simple.gui.worker;
 
 import cloud.isaura.experimental.cellularautomata.simple.algo.AutomataGenerator;
 import cloud.isaura.experimental.cellularautomata.simple.gui.CaGui;
+import cloud.isaura.experimental.cellularautomata.simple.gui.CaGuiImproved;
 import cloud.isaura.experimental.cellularautomata.simple.model.Cell;
 import io.reactivex.rxjava3.annotations.NonNull;
 import io.reactivex.rxjava3.core.Observer;
@@ -13,9 +14,9 @@ import java.util.List;
 public class MainSimulationWorker extends SwingWorker<Void, Cell> implements Observer<Cell>
 {
 
-    private CaGui gui;
+    private CaGuiImproved gui;
 
-    public MainSimulationWorker(CaGui gui)
+    public MainSimulationWorker(CaGuiImproved gui)
     {
         this.gui = gui;
     }
@@ -27,7 +28,7 @@ public class MainSimulationWorker extends SwingWorker<Void, Cell> implements Obs
                 + " ed eseguo doInBackground()");
 
         AutomataGenerator automataGenerator = new AutomataGenerator();
-        automataGenerator.execute(this);
+        automataGenerator.execute(this, this.gui.getSelected());
         System.out.println("Ciao, sono " + Thread.currentThread().getName()
                 + " e finisco doInBackground()");
         return null;
@@ -42,7 +43,7 @@ public class MainSimulationWorker extends SwingWorker<Void, Cell> implements Obs
     @Override
     public void onNext(@NonNull Cell cell)
     {
-        System.out.println("observed updated cell " + cell);
+        //System.out.println("observed updated cell " + cell);
         publish(cell);
     }
 
@@ -62,7 +63,7 @@ public class MainSimulationWorker extends SwingWorker<Void, Cell> implements Obs
     protected void process(List<Cell> chunks)
     {
         super.process(chunks);
-        System.out.println(chunks.size());
+        //System.out.println(chunks.size());
         for(int i = 0; i < chunks.size();i++)
         {
             Cell cell = chunks.get(i);

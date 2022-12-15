@@ -3,6 +3,7 @@ package cloud.isaura.experimental.cellularautomata.simple.algo;
 import cloud.isaura.experimental.cellularautomata.simple.model.Board;
 import cloud.isaura.experimental.cellularautomata.simple.model.Cell;
 import cloud.isaura.experimental.cellularautomata.simple.model.GenerationRule;
+import cloud.isaura.experimental.cellularautomata.simple.model.Ruleset;
 import cloud.isaura.experimental.cellularautomata.simple.utils.Constants;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.Observer;
@@ -11,13 +12,17 @@ public class AutomataGenerator
 {
 
 
-    public Board execute(Observer<Cell> observer)
+    public Board execute(Observer<Cell> observer, Ruleset rule)
     {
-        System.out.println("Execute");
+        //System.out.println("Execute");
         Board board = new Board(Constants.boardColumns, Constants.boardRows);
-        int[] ruleset = {0, 0, 0, 1, 1, 1, 1, 0};
+        int[] ruleset = rule.getRepresentation();
         GenerationRule generationRule = new GenerationRule(ruleset);
-        board.setStateAtValue(0, 50, 1);
+        board.setStateAtValue(0, Constants.boardColumns/2, 1);
+        final Cell firstCell = board.getCellsAt(0, Constants.boardColumns/2);
+        Observable<Cell> firstSingleObservable = Observable
+                .just(firstCell);
+        firstSingleObservable.blockingSubscribe(observer);
         for (int indexRow = 1; indexRow < Constants.boardRows; indexRow++)
         {
             for (int indexColumn = 0; indexColumn < Constants.boardColumns; indexColumn++)
@@ -38,7 +43,7 @@ public class AutomataGenerator
 
         }
 
-        System.out.println("******* At the end print board *******");
+        //System.out.println("******* At the end print board *******");
         board.print();
         return board;
 

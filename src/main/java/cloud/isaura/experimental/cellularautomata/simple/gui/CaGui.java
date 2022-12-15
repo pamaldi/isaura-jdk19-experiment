@@ -61,7 +61,7 @@ public class CaGui extends JFrame implements MouseListener, MouseMotionListener
         layeredPane.setPreferredSize(boardSize);
         layeredPane.addMouseListener(this);
         layeredPane.addMouseMotionListener(this);
-        this.simulationListener = new SimulationListener(this);
+        //this.simulationListener = new SimulationListener(this);
         this.boardGuiConfiguration = boardGuiConfiguration;
     }
 
