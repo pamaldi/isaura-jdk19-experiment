@@ -17,11 +17,11 @@ public class LangtonAnt
     {
         this.langtonAntParameter=langtonAntParameter;
         initGrid(langtonAntParameter);
-        addChannels(langtonAntParameter);
+        addCells(langtonAntParameter);
         this.grid.getCellAt(langtonAntParameter.rowAnt(), langtonAntParameter.columnAnt()).setAnt(Boolean.TRUE);
     }
 
-    private void addChannels(LangtonAntParameter langtonAntParameter)
+    private void addCells(LangtonAntParameter langtonAntParameter)
     {
         this.tickChannels   = makeGrid(langtonAntParameter.rows(), langtonAntParameter.columns(), Channel::new);
         this.resultChannels = makeGrid(langtonAntParameter.rows(), langtonAntParameter.columns(), Channel::new);
@@ -38,8 +38,8 @@ public class LangtonAnt
 
     private void initGrid(LangtonAntParameter langtonAntParameter)
     {
-        this.grid = new Grid();
-        this.grid.buildWithRowsAndColumns(langtonAntParameter.rows(), langtonAntParameter.columns());
+        this.grid = new Grid(langtonAntParameter.rows(), langtonAntParameter.columns());
+
     }
 
     void start() {
@@ -68,8 +68,9 @@ public class LangtonAnt
     }
 
     private static <T> List<List<T>> makeGrid(int rows, int cols, Supplier<T> supplier) {
-        return IntStream.range(0, rows)
-                .mapToObj(r -> IntStream.range(0, cols).mapToObj(c -> supplier.get()).toList())
+        return   IntStream.range(0, rows)
+                .mapToObj(r -> IntStream.range(0, cols)
+                .mapToObj(c -> supplier.get()).toList())
                 .toList();
     }
 }

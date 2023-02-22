@@ -9,7 +9,15 @@ public class Grid
 {
     private Cell[][] cells;
 
+    private int rows;
 
+    private int columns;
+
+    public Grid(int rows, int columns)
+    {
+        this.rows=rows;
+        this.columns=columns;
+    }
 
     public void buildWithRowsAndColumns(int rows, int columns)
     {
