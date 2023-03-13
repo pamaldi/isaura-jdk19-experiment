@@ -34,11 +34,6 @@ Total memory available to JVM (bytes): 975175680
 
 the benchmarks between split and tokenizer are the following:
 
-Benchmark                                           Mode      Cnt         Score     Error   Units
-BenchReadingTextFile.split                         thrpt        5        ≈ 10⁻³            ops/ns
-BenchReadingTextFile.tokenizer                     thrpt        5         2,990 ±   2,214  ops/ns
-BenchReadingTextFile.split                          avgt        5      2291,476 ±  41,889   ns/op
-BenchReadingTextFile.tokenizer                      avgt        5         0,320 ±   0,044   ns/op
 
 | Benchmark                        | Mode | Cnt   | Score | Units |
 |----------------------------------|------|-------| -----  | ---- |
