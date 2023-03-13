@@ -1,28 +1,31 @@
 package cloud.isaura.experimental.text;
 
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.StringTokenizer;
 
-public class Tokenizer implements LineReader
+public class Tokenizer implements TokenLineParser
 {
 
 
     private HashMap<String, Integer> tokens;
 
-    public void tokens(TokenizerOption tokenizerOption) throws IOException
+    public void tokens(TokenizerOption tokenizerOption) throws IOException, URISyntaxException
     {
-        if(tokenizerOption.absoluteFileName()==null)
+        if(tokenizerOption.url()==null)
         {
-            throw new IllegalArgumentException("File name mandatory");
+            throw new IllegalArgumentException("IS mandatory");
         }
 
-        Path path = Paths.get(tokenizerOption.absoluteFileName());
+        File file = new File(tokenizerOption.url().toURI());
+        Path path = Paths.get(file.getAbsolutePath());
         boolean exists = Files.exists(path);
         if(!exists)
         {
@@ -34,7 +37,7 @@ public class Tokenizer implements LineReader
         if(tokenizerOption.parseFileStrategy().equals(ParseFileStrategy.DEFAULT))
         {
             LineByLineReader lineByLineReader = new LineByLineReader();
-            lineByLineReader.read(tokenizerOption.absoluteFileName(), this);
+            lineByLineReader.read(tokenizerOption.url(), this);
         }
         System.out.println("lines "+this.tokens.entrySet().size());
 

@@ -1,25 +1,30 @@
 package cloud.isaura.experimental.text;
 
 
+import cloud.isaura.experimental.utils.SystemUtils;
 import org.openjdk.jol.info.ClassLayout;
 import org.openjdk.jol.info.GraphLayout;
-import org.openjdk.jol.vm.VM;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
 
 public class TokenizerTest
 {
-    public static void main(String[] args) throws IOException
+    public static void main(String[] args) throws IOException, URISyntaxException
     {
         Tokenizer tokenizer = new Tokenizer();
-        TokenizerOption tokenizerOption = new TokenizerOption("C:\\progetti\\isaura-jdk19-experiment\\src\\main\\resources\\data\\text\\archive\\spotify_millsongdata.csv", ParseFileStrategy.DEFAULT);
+        ClassLoader classLoader = TokenizerTest.class.getClassLoader();
+        URL resource = classLoader.getResource("spotify_millsongdata.csv");
+        TokenizerOption tokenizerOption = new TokenizerOption(resource, ParseFileStrategy.DEFAULT);
         long start = System.currentTimeMillis();
         tokenizer.tokens(tokenizerOption);
         long end = System.currentTimeMillis();
         long diff = end - start;
         System.out.println(" elapsed "+diff);
-        System.out.println(VM.current().details());
+        SystemUtils.printSystemResource();
         System.out.println(ClassLayout.parseInstance(tokenizer).toPrintable());
         System.out.println(GraphLayout.parseInstance(tokenizer).toFootprint());
+
     }
 }

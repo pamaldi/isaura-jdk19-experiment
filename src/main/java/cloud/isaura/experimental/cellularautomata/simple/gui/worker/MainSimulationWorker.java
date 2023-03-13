@@ -1,7 +1,6 @@
 package cloud.isaura.experimental.cellularautomata.simple.gui.worker;
 
 import cloud.isaura.experimental.cellularautomata.simple.algo.AutomataGenerator;
-import cloud.isaura.experimental.cellularautomata.simple.gui.CaGui;
 import cloud.isaura.experimental.cellularautomata.simple.gui.CaGuiImproved;
 import cloud.isaura.experimental.cellularautomata.simple.model.Cell;
 import io.reactivex.rxjava3.annotations.NonNull;

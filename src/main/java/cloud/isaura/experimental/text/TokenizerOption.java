@@ -1,7 +1,9 @@
 package cloud.isaura.experimental.text;
 
+import java.net.URL;
+
 public record TokenizerOption(
-        String absoluteFileName,
+        URL url,
         ParseFileStrategy parseFileStrategy
 )
 {

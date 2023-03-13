@@ -1,6 +1,5 @@
 package cloud.isaura.experimental.cellularautomata.simple;
 
-import cloud.isaura.experimental.cellularautomata.simple.gui.CaGui;
 import cloud.isaura.experimental.cellularautomata.simple.gui.CaGuiImproved;
 import cloud.isaura.experimental.cellularautomata.simple.model.BoardGuiConfiguration;
 import cloud.isaura.experimental.cellularautomata.simple.utils.Constants;

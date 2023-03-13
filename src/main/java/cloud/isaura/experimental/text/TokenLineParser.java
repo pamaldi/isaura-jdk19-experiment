@@ -1,6 +1,6 @@
 package cloud.isaura.experimental.text;
 
-public interface LineReader
+public interface TokenLineParser
 {
     void accept(String line);
 }

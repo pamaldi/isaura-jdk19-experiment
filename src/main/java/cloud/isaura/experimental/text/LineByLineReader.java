@@ -1,18 +1,18 @@
 package cloud.isaura.experimental.text;
 
-import javax.sound.sampled.Line;
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.Scanner;
 
 public class LineByLineReader
 {
-    public void read (String fileName, LineReader lineReader) throws IOException
+    public void read (URL url, TokenLineParser lineReader) throws IOException
     {
-        FileInputStream inputStream = null;
+        InputStream inputStream = url.openStream();
         Scanner sc = null;
         try {
-            inputStream = new FileInputStream(fileName);
+
             sc = new Scanner(inputStream, "UTF-8");
             while (sc.hasNextLine()) {
                 String line = sc.nextLine();

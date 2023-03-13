@@ -1,9 +1,7 @@
 package cloud.isaura.experimental.cellularautomata.simple.gui.listener;
 
-import cloud.isaura.experimental.cellularautomata.simple.gui.CaGui;
 import cloud.isaura.experimental.cellularautomata.simple.gui.CaGuiImproved;
 import cloud.isaura.experimental.cellularautomata.simple.gui.worker.MainSimulationWorker;
-import cloud.isaura.experimental.cellularautomata.simple.model.Ruleset;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
