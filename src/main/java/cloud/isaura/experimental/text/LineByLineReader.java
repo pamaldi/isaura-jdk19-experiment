@@ -1,5 +1,7 @@
 package cloud.isaura.experimental.text;
 
+import cloud.isaura.experimental.langton_ant.Channel;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -7,16 +9,27 @@ import java.util.Scanner;
 
 public class LineByLineReader
 {
-    public void read (URL url, TokenLineParser lineReader) throws IOException
+
+    private final String fileName;
+
+    private final Channel<String> channel;
+
+    public LineByLineReader(String fileName, Channel<String> channel)
     {
-        InputStream inputStream = url.openStream();
+        this.fileName = fileName;
+        this.channel = channel;
+    }
+
+    public void read () throws IOException
+    {
+        InputStream inputStream = FileUtils.getFileAsIOStream(fileName);
         Scanner sc = null;
         try {
 
             sc = new Scanner(inputStream, "UTF-8");
             while (sc.hasNextLine()) {
                 String line = sc.nextLine();
-                lineReader.accept(line);
+                this.channel.put(line);
             }
 
             if (sc.ioException() != null) {

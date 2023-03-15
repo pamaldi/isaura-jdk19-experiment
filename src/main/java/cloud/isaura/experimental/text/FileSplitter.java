@@ -10,23 +10,33 @@ import java.util.List;
 
 public class FileSplitter
 {
-    public static List<File> splitBySize(File largeFile, int maxChunkSize) throws IOException
+    public static List<File> splitBySize(InputStream in, int numberOfFile, String dir) throws IOException
     {
+        Integer maxChunkSize = 0;
+        Integer size = FileUtils.getSize(in);
+        Integer standardChunkSize = size /numberOfFile;
+        Integer currentChunked = 0;
         List<File> list = new ArrayList<>();
-        try (InputStream in = Files.newInputStream(largeFile.toPath())) {
+        for(int i = 0; i < numberOfFile; i++)
+        {
+            boolean isLast = i == numberOfFile - 1;
+            int remain = size - currentChunked;
+            maxChunkSize= isLast ?  remain :standardChunkSize;
+            currentChunked=currentChunked+maxChunkSize;
             final byte[] buffer = new byte[maxChunkSize];
             int dataRead = in.read(buffer);
-            while (dataRead > -1) {
-                File fileChunk = stageFile(buffer, dataRead);
-                list.add(fileChunk);
-                dataRead = in.read(buffer);
-            }
+            File fileChunk = stageFile(buffer, dataRead, dir);
+            list.add(fileChunk);
+            dataRead = in.read(buffer);
+
+
         }
+
         return list;
     }
 
-    private static File stageFile(byte[] buffer, int length) throws IOException {
-        File outPutFile = File.createTempFile("temp-", "-split", new File("C:\\progetti\\isaura-jdk19-experiment\\src\\main\\resources"));
+    private static File stageFile(byte[] buffer, int length, String dir) throws IOException {
+        File outPutFile = File.createTempFile("temp-", "-split", new File(dir));
         try(FileOutputStream fos = new FileOutputStream(outPutFile)) {
             fos.write(buffer, 0, length);
         }

@@ -1,10 +1,11 @@
 package cloud.isaura.experimental.text;
 
+import java.io.InputStream;
 import java.net.URL;
 
 public record TokenizerOption(
-        URL url,
-        ParseFileStrategy parseFileStrategy
+        InputStream is,
+        Integer numberOfReader
 )
 {
 
