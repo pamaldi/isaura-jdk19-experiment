@@ -66,6 +66,15 @@
                     <argLine>--enable-preview --add-modules jdk.incubator.concurrent</argLine>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.0.0</version>
+                <configuration>
+                    <mainClass>cloud.isaura.experimental.text.TokenizerTest</mainClass>
+                </configuration>
+            </plugin>
         </plugins>
+
     </build>
 </project>
