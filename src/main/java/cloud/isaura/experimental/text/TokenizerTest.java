@@ -1,9 +1,6 @@
 package cloud.isaura.experimental.text;
 
 
-import org.openjdk.jol.info.ClassLayout;
-import org.openjdk.jol.info.GraphLayout;
-
 import java.io.IOException;
 import java.net.URISyntaxException;
 
@@ -13,7 +10,7 @@ public class TokenizerTest
     public static void main(String[] args) throws IOException, URISyntaxException
     {
         Tokenizer tokenizer = new Tokenizer();
-        TokenizerOption tokenizerOption = new TokenizerOption("spotify_millsongdata.csv", 4);
+        TokenizerOption tokenizerOption = new TokenizerOption("spotify_millsongdata.csv", 100);
         long start = System.currentTimeMillis();
         tokenizer.tokens(tokenizerOption);
         long end = System.currentTimeMillis();

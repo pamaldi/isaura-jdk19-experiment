@@ -4,17 +4,22 @@ package cloud.isaura.experimental.text;
 import java.util.HashMap;
 import java.util.StringTokenizer;
 
-public class TokenWorker
+public class WordWorker
 {
 
     private HashMap<String, Integer> tokens;
 
     private final Channel<String> channel;
 
-    public TokenWorker(Channel<String> channel)
+
+
+    private HashMap<Character, Channel<String>> letterChannels;
+
+    public WordWorker(Channel<String> channel,  HashMap<Character, Channel<String>> letterChannels)
     {
         this.channel = channel;
         this.tokens = new HashMap<>();
+        this.letterChannels=letterChannels;
     }
 
     private void run() {
@@ -44,12 +49,11 @@ public class TokenWorker
             Boolean isValid = word.length() > 1 && !word.matches(regexNumber);
             if (isValid)
             {
-                if (tokens.containsKey(word))
+                Character c = word.charAt(0);
+                Channel<String> channel = this.letterChannels.get(c);
+                if(channel != null)
                 {
-                    tokens.put(word, tokens.get(word) + 1);
-                } else
-                {
-                    tokens.put(word, 1);
+                    channel.put(word);
                 }
             }
         }

@@ -3,16 +3,12 @@ package cloud.isaura.experimental.text;
 
 
 
-import io.reactivex.rxjava3.core.Scheduler;
-
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.StringTokenizer;
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 public class Tokenizer
 {
@@ -21,17 +17,24 @@ public class Tokenizer
     private HashMap<String, Integer> tokens;
     private Channel<String> resourceReaderChannel;
 
+    private Channel<String> wordChannel;
+
     private Channel<Boolean>[] closeChannels;
 
     private LineByLineReader lineByLineReader;
 
-    private List<TokenWorker> workers;
+    private List<WordWorker> wordWorkers;
+
+    private HashMap<Character, Channel<String>> letterChannels;
+
+    private List<WordCharacterCounter> wordCharacterCounters;
 
     public Tokenizer()
     {
         this.tokens = new HashMap<>();
         this.resourceReaderChannel = new Channel<>();
-
+        this.wordChannel = new Channel<>();
+        this.letterChannels = new HashMap<>();
 
     }
 
@@ -41,16 +44,26 @@ public class Tokenizer
        tokenizerParamsValidator.isValid(tokenizerOption);
        this.lineByLineReader = new LineByLineReader(tokenizerOption.fileName(),resourceReaderChannel) ;
        lineByLineReader.start();
-       this.workers = new ArrayList<>(tokenizerOption.numberOfReader());
+       this.wordWorkers = new ArrayList<>(tokenizerOption.numberOfReader());
+       char[] alphabet = "abcdefghijklmnopqrstuvwxyz".toCharArray();
+        this.wordWorkers = new ArrayList<>(alphabet.length);
+       for(int i = 0; i < alphabet.length;i++)
+       {
+           Channel<String> cha = new Channel<>();
+           this.letterChannels.put(alphabet[i], cha);
+           WordCharacterCounter wordCharacterCounter = new WordCharacterCounter(cha);
+           wordCharacterCounter.start();
+
+       }
        IntStream.range(0,tokenizerOption.numberOfReader())
                .forEach(
                        integer ->
-                       {
-                           TokenWorker tokenWorker = new TokenWorker(resourceReaderChannel);
-                           this.workers.add(tokenWorker);
-                           tokenWorker.start();
-                       }
-               );
+                           {
+                               WordWorker wordWorker = new WordWorker(this.resourceReaderChannel, this.letterChannels);
+                               this.wordWorkers.add(wordWorker);
+                               wordWorker.start();
+                           }
+                        );
        while(true)
        {
           // System.out.println("waiting");
