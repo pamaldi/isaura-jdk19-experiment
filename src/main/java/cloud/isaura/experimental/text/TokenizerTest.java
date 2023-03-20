@@ -13,7 +13,7 @@ public class TokenizerTest
     public static void main(String[] args) throws IOException, URISyntaxException
     {
         Tokenizer tokenizer = new Tokenizer();
-        TokenizerOption tokenizerOption = new TokenizerOption(FileUtils.getFileAsIOStream("spotify_millsongdata.csv"), 4);
+        TokenizerOption tokenizerOption = new TokenizerOption("spotify_millsongdata.csv", 4);
         long start = System.currentTimeMillis();
         tokenizer.tokens(tokenizerOption);
         long end = System.currentTimeMillis();

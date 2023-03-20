@@ -3,29 +3,35 @@ package cloud.isaura.experimental.text;
 
 
 
-import java.io.File;
+import io.reactivex.rxjava3.core.Scheduler;
+
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.StringTokenizer;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 public class Tokenizer
 {
 
 
     private HashMap<String, Integer> tokens;
-    private Channel<String> channel;
+    private Channel<String> resourceReaderChannel;
 
     private Channel<Boolean>[] closeChannels;
 
-    private List<LineByLineReader> lineByLineReaders;
+    private LineByLineReader lineByLineReader;
+
+    private List<TokenWorker> workers;
 
     public Tokenizer()
     {
         this.tokens = new HashMap<>();
-        this.channel = new Channel<>();
+        this.resourceReaderChannel = new Channel<>();
+
 
     }
 
@@ -33,6 +39,24 @@ public class Tokenizer
     {
        TokenizerParamsValidator tokenizerParamsValidator = new TokenizerParamsValidator();
        tokenizerParamsValidator.isValid(tokenizerOption);
+       this.lineByLineReader = new LineByLineReader(tokenizerOption.fileName(),resourceReaderChannel) ;
+       lineByLineReader.start();
+       this.workers = new ArrayList<>(tokenizerOption.numberOfReader());
+       IntStream.range(0,tokenizerOption.numberOfReader())
+               .forEach(
+                       integer ->
+                       {
+                           TokenWorker tokenWorker = new TokenWorker(resourceReaderChannel);
+                           this.workers.add(tokenWorker);
+                           tokenWorker.start();
+                       }
+               );
+       while(true)
+       {
+          // System.out.println("waiting");
+       }
+
+       /*
        this.lineByLineReaders = new ArrayList<>(tokenizerOption.numberOfReader());
        String resourcePath = FileUtils.getResourcePath();
         long start = System.currentTimeMillis();
@@ -57,62 +81,13 @@ public class Tokenizer
         this.lineByLineReaders.forEach(LineByLineReader::start);
 
 
-
+        */
 
 
 
     }
 
-    private void run() {
-        System.out.println("Start virtual thread for tokenizer "+Thread.currentThread());
-        while (true) {
-            int numberOfClose = 0;
-            for (int i = 0; i < this.closeChannels.length; i++)
-            {
-                Boolean closed = this.closeChannels[i].take().booleanValue() == true;
-                numberOfClose = closed ? numberOfClose + 1 : numberOfClose;
-            }
-            Boolean areAllClosed = numberOfClose == this.closeChannels.length;
-            System.out.println("areAllClosed  " + areAllClosed);
 
-
-            String take = this.channel.take();
-            putLine(take);
-            System.out.println("areAllClosed exit "+areAllClosed );
-        }
-
-
-    }
-
-    private void sleep() {
-        try {
-            Thread.sleep(1);
-        } catch (InterruptedException ignore) {
-
-        }
-    }
-
-    private void putLine(String line)
-    {
-        String regexNumber = "[0-9]+";
-
-        StringTokenizer sTokenize = new StringTokenizer(line.toLowerCase().replaceAll("\\p{Punct}", " "));
-        while (sTokenize.hasMoreTokens())
-        {
-            String word = sTokenize.nextToken();
-            Boolean isValid = word.length() > 1 && !word.matches(regexNumber);
-            if (isValid)
-            {
-                if (tokens.containsKey(word))
-                {
-                    tokens.put(word, tokens.get(word) + 1);
-                } else
-                {
-                    tokens.put(word, 1);
-                }
-            }
-        }
-    }
 
     public Integer numberOfTokens()
     {

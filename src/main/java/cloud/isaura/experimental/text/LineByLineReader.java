@@ -14,18 +14,16 @@ public class LineByLineReader
 
     private final Channel<String> channel;
 
-    private final Channel<Boolean> close;
 
-    public LineByLineReader(String fileName, Channel<String> channel, Channel<Boolean> close)
+    public LineByLineReader(String fileName, Channel<String> channel)
     {
         this.fileName = fileName;
         this.channel = channel;
-        this.close=close;
     }
 
     public void read () throws IOException
     {
-        InputStream inputStream =  new FileInputStream(fileName);
+        InputStream inputStream =  FileUtils.getFileAsIOStream(fileName);
         Scanner sc = null;
 
         try {
@@ -49,14 +47,13 @@ public class LineByLineReader
             if (sc != null) {
                 sc.close();
             }
-            System.out.println("send close"+Thread.currentThread());
-            this.close.put(Boolean.TRUE);
+
         }
 
     }
 
-    public void run() {
-        System.out.println("Start virtual thread "+Thread.currentThread());
+    private void run() {
+        System.out.println("Line by line reader : Start virtual thread "+Thread.currentThread());
         try
         {
             read();
@@ -64,10 +61,10 @@ public class LineByLineReader
         {
             throw new RuntimeException(e);
         }
-        System.out.println("End virtual thread "+Thread.currentThread());
+        System.out.println("Line by line reader : End virtual thread "+Thread.currentThread());
     }
 
-    void start() {
+    public void start() {
         Thread.startVirtualThread(this::run);
     }
 }

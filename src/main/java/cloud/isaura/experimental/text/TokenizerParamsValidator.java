@@ -7,10 +7,16 @@ public class TokenizerParamsValidator
 {
     public void isValid(TokenizerOption tokenizerOption) throws FileNotFoundException, URISyntaxException
     {
-        if(tokenizerOption.is()==null)
+        if(tokenizerOption.fileName()==null || tokenizerOption.fileName().isEmpty())
         {
-            throw new IllegalArgumentException("Resource is mandatory");
+            throw new IllegalArgumentException("File is mandatory");
         }
+
+        if(tokenizerOption.numberOfReader() == null || tokenizerOption.numberOfReader()==0)
+        {
+            throw new IllegalArgumentException("Number of readers > 0");
+        }
+
 
     }
 
