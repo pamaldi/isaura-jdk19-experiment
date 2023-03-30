@@ -8,10 +8,6 @@ public interface Philosopher extends Runnable
 
     void setPhilosopherAttribute(PhilosopherAttribute philosopherAttribute);
 
-    void setChannelLeft(Channel channel);
-
-    void setChannelRight(Channel channel);
-
     void setPos(Integer pos);
 
 

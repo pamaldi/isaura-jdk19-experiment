@@ -7,10 +7,9 @@ public class StandardPhilosopher implements Philosopher
 
     private PhilosopherAttribute philosopherAttribute;
 
-    private Channel left;
+    private SynchroNotBufferedChannel channelWithLeftFork;
 
-    private Channel right;
-
+    private SynchroNotBufferedChannel channelWithRightFork;
     private Integer pos;
 
     @Override
@@ -42,16 +41,14 @@ public class StandardPhilosopher implements Philosopher
         this.philosopherAttribute=philosopherAttribute;
     }
 
-    @Override
-    public void setChannelLeft(Channel channel)
+    public void setChannelWithLeftFork(SynchroNotBufferedChannel channelWithLeftFork)
     {
-      this.left=channel;
+        this.channelWithLeftFork = channelWithLeftFork;
     }
 
-    @Override
-    public void setChannelRight(Channel channel)
+    public void setChannelWithRightFork(SynchroNotBufferedChannel channelWithRightFork)
     {
-        this.right=channel;
+        this.channelWithRightFork = channelWithRightFork;
     }
 
     @Override
@@ -62,7 +59,7 @@ public class StandardPhilosopher implements Philosopher
 
     private String descr()
     {
-        return "Phil number "+pos+ " thread"+Thread.currentThread()+" with left channel "+this.left+ "and rigth channel "+this.right;
+        return "Phil number "+pos+ " thread"+Thread.currentThread();
     }
 
     @Override
@@ -80,15 +77,15 @@ public class StandardPhilosopher implements Philosopher
                 }
                 try
                 {
-                    while(!this.left.take() || !this.right.take())
+                    while(!this.channelWithLeftFork.take() || !this.channelWithRightFork.take())
                     {
                         System.out.println(
                                 descr() + " wait for fork");
                         Thread.sleep(((int) (Math.random() * philosopherAttribute.eatTime())));
                     }
                     eat();
-                    this.left.put();
-                    this.right.put();
+                    this.channelWithLeftFork.put();
+                    this.channelWithRightFork.put();
                 } catch (InterruptedException e)
                 {
                     throw new RuntimeException(e);

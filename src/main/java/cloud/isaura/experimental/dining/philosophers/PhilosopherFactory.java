@@ -3,7 +3,7 @@ package cloud.isaura.experimental.dining.philosophers;
 public class PhilosopherFactory
 {
 
-    public static Philosopher build(PhilosopherType philosopherType, PhilosopherAttribute philosopherAttribute, Channel left, Channel right, Integer pos)
+    public static Philosopher build(PhilosopherType philosopherType, PhilosopherAttribute philosopherAttribute, SynchroNotBufferedChannel leftChannel, SynchroNotBufferedChannel rightChannel, Integer pos)
     {
 
 
@@ -11,8 +11,8 @@ public class PhilosopherFactory
         {
             StandardPhilosopher standardPhilosopher = new StandardPhilosopher();
             standardPhilosopher.setPhilosopherAttribute(philosopherAttribute);
-            standardPhilosopher.setChannelLeft(left);
-            standardPhilosopher.setChannelRight(right);
+            standardPhilosopher.setChannelWithLeftFork(leftChannel);
+            standardPhilosopher.setChannelWithRightFork(rightChannel);
             standardPhilosopher.setPos(pos);
             return standardPhilosopher;
         }else
