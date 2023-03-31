@@ -14,12 +14,17 @@ public class DiningPhilosophers
 
     public void agorazein(DiningPhilosophersParams diningPhilosophersParams)
     {
-
+        DiningPhilosopherMonitor diningPhilosopherMonitor = new DiningPhilosopherMonitor(diningPhilosophersParams.numberOfPhilosophers());
+        StandardWaiter standardWaiter = new StandardWaiter(diningPhilosopherMonitor);
+        Thread t = new Thread(standardWaiter);
+        t.start();
         initChannelsBetweenPhilosopherAndFork(diningPhilosophersParams);
-        initPhilosophers(diningPhilosophersParams);
+        initPhilosophers(diningPhilosophersParams, diningPhilosopherMonitor);
         initForks(diningPhilosophersParams);
         startPhilosophers(diningPhilosophersParams);
         startForks(diningPhilosophersParams);
+
+
 
     }
 
@@ -43,15 +48,18 @@ public class DiningPhilosophers
                 );
     }
 
-    private void initPhilosophers(DiningPhilosophersParams diningPhilosophersParams)
+    private void initPhilosophers(DiningPhilosophersParams diningPhilosophersParams, DiningPhilosopherMonitor diningPhilosopherMonitor)
     {
         Integer numberOfPhilosophers = diningPhilosophersParams.numberOfPhilosophers();
         this.philosophers= new Philosopher[numberOfPhilosophers];
-        PhilosopherAttribute philosopherAttribute = new PhilosopherAttribute(diningPhilosophersParams.eatTime(), diningPhilosophersParams.thinkingTime());
         IntStream.range(0, diningPhilosophersParams.numberOfPhilosophers())
                 .forEach(i ->
                         {
-                            this.philosophers[i]= PhilosopherFactory.build(diningPhilosophersParams.philosopherType(),philosopherAttribute,this.channelsBetweenPhilosopherAndFork[i],this.channelsBetweenPhilosopherAndFork[(i+1)%diningPhilosophersParams.numberOfPhilosophers()],i);
+                            PhilosopherAttribute philosopherAttribute = new PhilosopherAttribute(diningPhilosophersParams.eatTime(), diningPhilosophersParams.thinkingTime(), diningPhilosophersParams.cycles(), diningPhilosopherMonitor,i);
+                            int leftIndex = i;
+                            int rightIndex = (i+1)%diningPhilosophersParams.numberOfPhilosophers();
+                            System.out.println(" Phil "+i+" l "+leftIndex+" r "+rightIndex);
+                            this.philosophers[i]= PhilosopherFactory.build(diningPhilosophersParams.philosopherType(),philosopherAttribute,this.channelsBetweenPhilosopherAndFork[leftIndex],this.channelsBetweenPhilosopherAndFork[rightIndex],i);
 
                         }
                 );

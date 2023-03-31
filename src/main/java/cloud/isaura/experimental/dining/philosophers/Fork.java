@@ -16,8 +16,8 @@ public class Fork implements Runnable
     {
         while (true)
         {
-            this.channel.put();
-            this.channel.take();
+
+
         }
     }
 }

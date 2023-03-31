@@ -10,7 +10,7 @@ public class StandardPhilosopher implements Philosopher
     private SynchroNotBufferedChannel channelWithLeftFork;
 
     private SynchroNotBufferedChannel channelWithRightFork;
-    private Integer pos;
+
 
     @Override
     public void think() throws InterruptedException
@@ -29,9 +29,12 @@ public class StandardPhilosopher implements Philosopher
 
         System.out.println(
                 descr() + " start eating ");
+        this.philosopherAttribute.diningPhilosopherMonitor().startEating();
         Thread.sleep(((int) (Math.random() * philosopherAttribute.eatTime())));
+        this.philosopherAttribute.diningPhilosopherMonitor().endEating();
         System.out.println(
                 descr() + " end eating ");
+        this.philosopherAttribute.diningPhilosopherMonitor().addEatInfo(philosopherAttribute.index());
 
     }
 
@@ -51,22 +54,18 @@ public class StandardPhilosopher implements Philosopher
         this.channelWithRightFork = channelWithRightFork;
     }
 
-    @Override
-    public void setPos(Integer pos)
-    {
-        this.pos=pos;
-    }
+
 
     private String descr()
     {
-        return "Phil number "+pos+ " thread"+Thread.currentThread();
+        return "Phil number "+this.philosopherAttribute.index()+ " thread"+Thread.currentThread();
     }
 
     @Override
     public void run()
     {
             System.out.println(descr());
-            while(true)
+            for(int i = 0; i < philosopherAttribute.cycles();i++)
             {
                 try
                 {
@@ -77,15 +76,11 @@ public class StandardPhilosopher implements Philosopher
                 }
                 try
                 {
-                    while(!this.channelWithLeftFork.take() || !this.channelWithRightFork.take())
-                    {
-                        System.out.println(
-                                descr() + " wait for fork");
-                        Thread.sleep(((int) (Math.random() * philosopherAttribute.eatTime())));
-                    }
-                    eat();
                     this.channelWithLeftFork.put();
                     this.channelWithRightFork.put();
+                    eat();
+                    this.channelWithLeftFork.take();
+                    this.channelWithRightFork.take();
                 } catch (InterruptedException e)
                 {
                     throw new RuntimeException(e);

@@ -8,7 +8,7 @@ public interface Philosopher extends Runnable
 
     void setPhilosopherAttribute(PhilosopherAttribute philosopherAttribute);
 
-    void setPos(Integer pos);
+
 
 
 }

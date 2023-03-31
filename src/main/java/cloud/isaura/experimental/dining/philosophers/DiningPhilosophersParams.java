@@ -6,7 +6,9 @@ public record DiningPhilosophersParams
             PhilosopherType philosopherType,
             Integer numberOfPhilosophers,
             Long thinkingTime,
-            Long eatTime
+            Long eatTime,
+
+            Long cycles
 
         )
 {

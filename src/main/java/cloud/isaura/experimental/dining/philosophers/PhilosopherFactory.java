@@ -13,7 +13,7 @@ public class PhilosopherFactory
             standardPhilosopher.setPhilosopherAttribute(philosopherAttribute);
             standardPhilosopher.setChannelWithLeftFork(leftChannel);
             standardPhilosopher.setChannelWithRightFork(rightChannel);
-            standardPhilosopher.setPos(pos);
+
             return standardPhilosopher;
         }else
         {

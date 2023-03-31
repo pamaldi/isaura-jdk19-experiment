@@ -9,6 +9,7 @@ public class SynchroNotBufferedChannel
 
     public Boolean take() {
         try {
+            System.out.println(Thread.currentThread()+" take on channel "+this);
             Boolean take = queue.take();
             //System.out.println("Get from queue value "+take);
             return take;
