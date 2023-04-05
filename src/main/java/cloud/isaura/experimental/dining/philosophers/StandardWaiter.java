@@ -1,13 +1,14 @@
 package cloud.isaura.experimental.dining.philosophers;
 
-public class StandardWaiter implements Runnable
+public class StandardWaiter implements Waiter, Runnable
 {
 
-    private DiningPhilosopherMonitor diningPhilosopherMonitor;
 
-    public StandardWaiter(DiningPhilosopherMonitor diningPhilosopherMonitor)
+
+    @Override
+    public void ensurePleasantDinner()
     {
-        this.diningPhilosopherMonitor = diningPhilosopherMonitor;
+
     }
 
     @Override
@@ -15,15 +16,6 @@ public class StandardWaiter implements Runnable
     {
         while(true)
         {
-            this.diningPhilosopherMonitor.print();
-            try
-            {
-                Thread.sleep(2000);
-            } catch (InterruptedException e)
-            {
-                throw new RuntimeException(e);
-            }
-
 
         }
     }

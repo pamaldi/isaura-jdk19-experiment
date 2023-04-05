@@ -1,9 +1,11 @@
 package cloud.isaura.experimental.dining.philosophers;
 
+import cloud.isaura.experimental.channels.Channel;
+
 public class PhilosopherFactory
 {
 
-    public static Philosopher build(PhilosopherType philosopherType, PhilosopherAttribute philosopherAttribute, SynchroNotBufferedChannel leftChannel, SynchroNotBufferedChannel rightChannel, Integer pos)
+    public static Philosopher build(PhilosopherType philosopherType, PhilosopherAttribute philosopherAttribute, Channel leftChannel, Channel rightChannel, Integer pos)
     {
 
 

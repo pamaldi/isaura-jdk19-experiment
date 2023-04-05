@@ -1,12 +1,14 @@
 package cloud.isaura.experimental.dining.philosophers;
 
+import cloud.isaura.experimental.channels.Channel;
+
 public class Fork implements Runnable
 {
 
-    private final SynchroNotBufferedChannel channel;
+    private final Channel channel;
 
 
-    public Fork(SynchroNotBufferedChannel channel)
+    public Fork(Channel channel)
     {
         this.channel = channel;
     }

@@ -1,5 +1,7 @@
 package cloud.isaura.experimental.dining.philosophers;
 
+import cloud.isaura.experimental.channels.Channel;
+
 public class StandardPhilosopher implements Philosopher
 {
 
@@ -7,9 +9,9 @@ public class StandardPhilosopher implements Philosopher
 
     private PhilosopherAttribute philosopherAttribute;
 
-    private SynchroNotBufferedChannel channelWithLeftFork;
+    private Channel channelWithLeftFork;
 
-    private SynchroNotBufferedChannel channelWithRightFork;
+    private Channel channelWithRightFork;
 
 
     @Override
@@ -44,12 +46,12 @@ public class StandardPhilosopher implements Philosopher
         this.philosopherAttribute=philosopherAttribute;
     }
 
-    public void setChannelWithLeftFork(SynchroNotBufferedChannel channelWithLeftFork)
+    public void setChannelWithLeftFork(Channel channelWithLeftFork)
     {
         this.channelWithLeftFork = channelWithLeftFork;
     }
 
-    public void setChannelWithRightFork(SynchroNotBufferedChannel channelWithRightFork)
+    public void setChannelWithRightFork(Channel channelWithRightFork)
     {
         this.channelWithRightFork = channelWithRightFork;
     }
@@ -76,11 +78,11 @@ public class StandardPhilosopher implements Philosopher
                 }
                 try
                 {
-                    this.channelWithLeftFork.put();
-                    this.channelWithRightFork.put();
+                    this.channelWithLeftFork.senderConnection().send(descr());
+                    this.channelWithRightFork.senderConnection().send(descr());
                     eat();
-                    this.channelWithLeftFork.take();
-                    this.channelWithRightFork.take();
+                    this.channelWithLeftFork.receiverConnection().receive();
+                    this.channelWithRightFork.receiverConnection().receive();
                 } catch (InterruptedException e)
                 {
                     throw new RuntimeException(e);

@@ -1,5 +1,7 @@
 package cloud.isaura.experimental.dining.philosophers;
 
+import cloud.isaura.experimental.channels.Channel;
+
 import java.util.stream.IntStream;
 
 public class DiningPhilosophers
@@ -8,16 +10,17 @@ public class DiningPhilosophers
 
     private Fork[]        forks;
 
-    private SynchroNotBufferedChannel[] channelsBetweenPhilosopherAndFork;
+    private Channel[] channelsBetweenPhilosopherAndFork;
 
     private Waiter waiter;
 
     public void agorazein(DiningPhilosophersParams diningPhilosophersParams)
     {
         DiningPhilosopherMonitor diningPhilosopherMonitor = new DiningPhilosopherMonitor(diningPhilosophersParams.numberOfPhilosophers());
-        StandardWaiter standardWaiter = new StandardWaiter(diningPhilosopherMonitor);
-        Thread t = new Thread(standardWaiter);
+        DiningPhilosopherMonitorLog diningPhilosopherMonitorLog = new DiningPhilosopherMonitorLog(diningPhilosopherMonitor);
+        Thread t = new Thread(diningPhilosopherMonitorLog);
         t.start();
+
         initChannelsBetweenPhilosopherAndFork(diningPhilosophersParams);
         initPhilosophers(diningPhilosophersParams, diningPhilosopherMonitor);
         initForks(diningPhilosophersParams);
@@ -41,10 +44,10 @@ public class DiningPhilosophers
 
     private void initChannelsBetweenPhilosopherAndFork(DiningPhilosophersParams diningPhilosophersParams)
     {
-        this.channelsBetweenPhilosopherAndFork = new SynchroNotBufferedChannel[diningPhilosophersParams.numberOfPhilosophers()];
+        this.channelsBetweenPhilosopherAndFork = new Channel[diningPhilosophersParams.numberOfPhilosophers()];
         IntStream.range(0, diningPhilosophersParams.numberOfPhilosophers())
                 .forEach(
-                        i -> this.channelsBetweenPhilosopherAndFork[i] = new SynchroNotBufferedChannel()
+                        i -> this.channelsBetweenPhilosopherAndFork[i] = new Channel(Integer.valueOf(i).longValue())
                 );
     }
 
