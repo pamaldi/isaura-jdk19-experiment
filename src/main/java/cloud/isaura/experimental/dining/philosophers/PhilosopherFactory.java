@@ -5,7 +5,7 @@ import cloud.isaura.experimental.channels.Channel;
 public class PhilosopherFactory
 {
 
-    public static Philosopher build(PhilosopherType philosopherType, PhilosopherAttribute philosopherAttribute, Channel leftChannel, Channel rightChannel, Integer pos)
+    public static Philosopher build(PhilosopherType philosopherType, PhilosopherAttribute philosopherAttribute, BlockingQueueChannel waiterChannel, BlockingQueueChannel waiterChannelRelease, Integer pos)
     {
 
 
@@ -13,8 +13,9 @@ public class PhilosopherFactory
         {
             StandardPhilosopher standardPhilosopher = new StandardPhilosopher();
             standardPhilosopher.setPhilosopherAttribute(philosopherAttribute);
-            standardPhilosopher.setChannelWithLeftFork(leftChannel);
-            standardPhilosopher.setChannelWithRightFork(rightChannel);
+            standardPhilosopher.setChannelRequestWaiter(waiterChannel);
+            standardPhilosopher.setChannelReleaseWaiter(waiterChannelRelease);
+            standardPhilosopher.setPos(pos);
 
             return standardPhilosopher;
         }else

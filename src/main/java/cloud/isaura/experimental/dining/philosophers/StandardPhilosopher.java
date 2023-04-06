@@ -1,6 +1,5 @@
 package cloud.isaura.experimental.dining.philosophers;
 
-import cloud.isaura.experimental.channels.Channel;
 
 public class StandardPhilosopher implements Philosopher
 {
@@ -9,10 +8,11 @@ public class StandardPhilosopher implements Philosopher
 
     private PhilosopherAttribute philosopherAttribute;
 
-    private Channel channelWithLeftFork;
+    private BlockingQueueChannel channelRequestWaiter;
 
-    private Channel channelWithRightFork;
+    private BlockingQueueChannel channelReleaseWaiter;
 
+    private Integer pos;
 
     @Override
     public void think() throws InterruptedException
@@ -36,7 +36,7 @@ public class StandardPhilosopher implements Philosopher
         this.philosopherAttribute.diningPhilosopherMonitor().endEating();
         System.out.println(
                 descr() + " end eating ");
-        this.philosopherAttribute.diningPhilosopherMonitor().addEatInfo(philosopherAttribute.index());
+        this.philosopherAttribute.diningPhilosopherMonitor().addEatInfo(this.pos);
 
     }
 
@@ -46,27 +46,21 @@ public class StandardPhilosopher implements Philosopher
         this.philosopherAttribute=philosopherAttribute;
     }
 
-    public void setChannelWithLeftFork(Channel channelWithLeftFork)
+    public void setChannelRequestWaiter(BlockingQueueChannel channelRequestWaiter)
     {
-        this.channelWithLeftFork = channelWithLeftFork;
+        this.channelRequestWaiter = channelRequestWaiter;
     }
-
-    public void setChannelWithRightFork(Channel channelWithRightFork)
-    {
-        this.channelWithRightFork = channelWithRightFork;
-    }
-
-
 
     private String descr()
     {
-        return "Phil number "+this.philosopherAttribute.index()+ " thread"+Thread.currentThread();
+        return "Phil number "+this.pos+ " thread"+Thread.currentThread();
     }
 
     @Override
     public void run()
     {
             System.out.println(descr());
+
             for(int i = 0; i < philosopherAttribute.cycles();i++)
             {
                 try
@@ -78,15 +72,25 @@ public class StandardPhilosopher implements Philosopher
                 }
                 try
                 {
-                    this.channelWithLeftFork.senderConnection().send(descr());
-                    this.channelWithRightFork.senderConnection().send(descr());
+
+                    this.channelRequestWaiter.send(this.pos);
                     eat();
-                    this.channelWithLeftFork.receiverConnection().receive();
-                    this.channelWithRightFork.receiverConnection().receive();
+                    this.channelReleaseWaiter.send(pos);
+
                 } catch (InterruptedException e)
                 {
                     throw new RuntimeException(e);
                 }
             }
+    }
+
+    public void setPos(Integer pos)
+    {
+        this.pos = pos;
+    }
+
+    public void setChannelReleaseWaiter(BlockingQueueChannel channelReleaseWaiter)
+    {
+        this.channelReleaseWaiter = channelReleaseWaiter;
     }
 }

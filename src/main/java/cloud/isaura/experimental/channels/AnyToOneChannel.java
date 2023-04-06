@@ -1,6 +1,6 @@
 package cloud.isaura.experimental.channels;
 
-public class Channel
+public class AnyToOneChannel
 {
     protected boolean senderOk = false, receiverOk = false;
     protected Object message;
@@ -8,7 +8,7 @@ public class Channel
 
     private final Long id;
 
-    public Channel(Long id) {
+    public AnyToOneChannel(Long id) {
         this.id = id;
     }
 
@@ -20,7 +20,7 @@ public class Channel
     {
         public Object receive()
         {
-            synchronized (Channel.this)
+            synchronized (AnyToOneChannel.this)
             {
 
                 Object msg;
@@ -29,7 +29,7 @@ public class Channel
                     try
                     {
                         System.out.println("Receiver  waiting for sender on channel " + id);
-                        Channel.this.wait();
+                        AnyToOneChannel.this.wait();
                     } catch (InterruptedException e)
                     {
                     }
@@ -37,7 +37,7 @@ public class Channel
                 msg = message;
                 senderOk = false;
                 receiverOk = false;
-                Channel.this.notify();
+                AnyToOneChannel.this.notify();
                 return msg;
             }
         }//receive
@@ -47,17 +47,17 @@ public class Channel
     {
         public void send(Object msg)
         {
-            synchronized (Channel.this)
+            synchronized (AnyToOneChannel.this)
             {
 
                 message = msg;
                 senderOk = true;
-                if (receiverOk) Channel.this.notify();
+                if (receiverOk) AnyToOneChannel.this.notify();
                 while (senderOk)
                     try
                     {
                         System.out.println("Sender with message" + msg  + " waiting for receiver on channel " + id);
-                        Channel.this.wait();
+                        AnyToOneChannel.this.wait();
                     } catch (InterruptedException e)
                     {
                     }

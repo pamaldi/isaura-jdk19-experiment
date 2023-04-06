@@ -1,22 +1,32 @@
 package cloud.isaura.experimental.dining.philosophers;
 
-public class StandardWaiter implements Waiter, Runnable
+import cloud.isaura.experimental.channels.Channel;
+
+
+
+public class StandardWaiter implements  Runnable
 {
 
 
+    private BlockingQueueChannel requestChannel;
+    private BlockingQueueChannel responseChannel;
 
-    @Override
-    public void ensurePleasantDinner()
+
+    public StandardWaiter(BlockingQueueChannel requestChannel, BlockingQueueChannel responseChannel)
     {
-
+        this.requestChannel = requestChannel;
+        this.responseChannel = responseChannel;
     }
+
+
 
     @Override
     public void run()
     {
         while(true)
         {
-
+            Integer receive = this.requestChannel.receive();
+            this.responseChannel.receive();
         }
     }
 }
