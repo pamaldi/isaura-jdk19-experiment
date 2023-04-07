@@ -2,16 +2,21 @@ package cloud.isaura.experimental.dining.philosophers;
 
 
 
+import cloud.isaura.experimental.channels.Channel;
+
 import java.util.stream.IntStream;
 
 public class DiningPhilosophers
 {
     private Philosopher[] philosophers;
-    private BlockingQueueChannel requestChannel;
 
-    private BlockingQueueChannel releaseChannel;
+    private Fork[] forks;
 
     private StandardWaiter waiter;
+
+    private Channel[] pickUpForksChannels;
+
+    private Channel[] putDownForksChannels;
 
     public void agorazein(DiningPhilosophersParams diningPhilosophersParams)
     {
@@ -20,10 +25,11 @@ public class DiningPhilosophers
         Thread t = new Thread(diningPhilosopherMonitorLog);
         t.start();
 
-        initChannelsBetweenPhilosopherAndWaiter(diningPhilosophersParams);
+        initForksChannels(diningPhilosophersParams);
         initPhilosophers(diningPhilosophersParams, diningPhilosopherMonitor);
         startPhilosophers(diningPhilosophersParams);
-        initWaiter(diningPhilosophersParams);
+        initForks(diningPhilosophersParams);
+        startForks(diningPhilosophersParams);
 
 
 
@@ -40,41 +46,73 @@ public class DiningPhilosophers
                 );
     }
 
-    private void initChannelsBetweenPhilosopherAndWaiter(DiningPhilosophersParams diningPhilosophersParams)
+    private void startForks(DiningPhilosophersParams diningPhilosophersParams)
     {
-        this.requestChannel = new BlockingQueueChannel(diningPhilosophersParams.numberOfPhilosophers());
-        this.releaseChannel = new BlockingQueueChannel(diningPhilosophersParams.numberOfPhilosophers());
-
+        IntStream.range(0, diningPhilosophersParams.numberOfPhilosophers())
+                .forEach(i ->
+                        {
+                            Thread t = new Thread(this.forks[i]);
+                            t.start();
+                        }
+                );
     }
+
 
     private void initPhilosophers(DiningPhilosophersParams diningPhilosophersParams, DiningPhilosopherMonitor diningPhilosopherMonitor)
     {
         Integer numberOfPhilosophers = diningPhilosophersParams.numberOfPhilosophers();
         this.philosophers= new Philosopher[numberOfPhilosophers];
-        IntStream.range(0, diningPhilosophersParams.numberOfPhilosophers())
-                .forEach(i ->
-                        {
-                            PhilosopherAttribute philosopherAttribute = new PhilosopherAttribute(diningPhilosophersParams.eatTime(), diningPhilosophersParams.thinkingTime(), diningPhilosophersParams.cycles(), diningPhilosopherMonitor);
-                            int leftIndex = i;
-                            int rightIndex = (i+1)%diningPhilosophersParams.numberOfPhilosophers();
-                            System.out.println(" Phil "+i+" l "+leftIndex+" r "+rightIndex);
-                            this.philosophers[i]= PhilosopherFactory.build(diningPhilosophersParams.philosopherType(),philosopherAttribute,this.requestChannel,this.releaseChannel,i);
+        int current = 0;
+        for(int i = 0; i < numberOfPhilosophers; i++)
 
+                        {
+                            int leftIndex = current++;
+                            int rightIndex = ( (current++) %(diningPhilosophersParams.numberOfPhilosophers()*2));
+
+                            System.out.println(" Phil "+i+" l "+leftIndex+" r "+rightIndex);
+                            this.philosophers[i]=
+                                    new StandardPhilosopher(this.pickUpForksChannels[leftIndex],this.pickUpForksChannels[rightIndex],
+                                            this.putDownForksChannels[leftIndex],this.putDownForksChannels[rightIndex],i,
+                                            diningPhilosophersParams.eatTime(),diningPhilosophersParams.thinkingTime(),diningPhilosophersParams.cycles(),diningPhilosopherMonitor);
                         }
-                );
+
 
     }
 
-
-
-
-
-
+    /*
     private void initWaiter(DiningPhilosophersParams diningPhilosophersParams)
     {
         this.waiter = new StandardWaiter(this.requestChannel,this.releaseChannel);
         Thread t = new Thread(this.waiter);
         t.start();
+    }
+
+     */
+
+    private void initForks(DiningPhilosophersParams diningPhilosophersParams)
+    {
+        this.forks = new Fork[diningPhilosophersParams.numberOfPhilosophers()];
+        IntStream.range(0, diningPhilosophersParams.numberOfPhilosophers())
+                .forEach(i ->
+                        {
+                            int rightIndex = i+diningPhilosophersParams.numberOfPhilosophers();
+                            this.forks[i]= new Fork(this.pickUpForksChannels[i],this.putDownForksChannels[i], this.pickUpForksChannels[rightIndex],this.putDownForksChannels[rightIndex]);
+                        }
+                );
+    }
+
+
+    private void initForksChannels(DiningPhilosophersParams diningPhilosophersParams)
+    {
+        this.pickUpForksChannels = new Channel[diningPhilosophersParams.numberOfPhilosophers()*2];
+        this.putDownForksChannels = new Channel[diningPhilosophersParams.numberOfPhilosophers()*2];
+        IntStream.range(0, diningPhilosophersParams.numberOfPhilosophers()*2)
+                .forEach(i ->
+                        {
+                            this.pickUpForksChannels[i] = new Channel(Integer.valueOf(i).longValue());
+                            this.putDownForksChannels[i] = new Channel(Integer.valueOf(i).longValue());
+                        }
+                );
     }
 
 }

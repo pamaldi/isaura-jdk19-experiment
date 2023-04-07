@@ -8,7 +8,7 @@ public record DiningPhilosophersParams
             Long thinkingTime,
             Long eatTime,
 
-            Long cycles
+            Integer cycles
 
         )
 {

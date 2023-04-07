@@ -6,7 +6,7 @@ public interface Philosopher extends Runnable
 
     void eat() throws InterruptedException;
 
-    void setPhilosopherAttribute(PhilosopherAttribute philosopherAttribute);
+
 
 
 

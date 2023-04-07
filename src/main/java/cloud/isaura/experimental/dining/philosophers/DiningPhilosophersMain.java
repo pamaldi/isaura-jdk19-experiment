@@ -8,7 +8,7 @@ public class DiningPhilosophersMain
     public static void main(String[] args)
     {
 
-        DiningPhilosophersParams diningPhilosophersParams = new DiningPhilosophersParams(PhilosopherType.GREEK,5,1000L,1000L,2L);
+        DiningPhilosophersParams diningPhilosophersParams = new DiningPhilosophersParams(PhilosopherType.GREEK,2,1000L,1000L,2);
         DiningPhilosophers diningPhilosophers = new DiningPhilosophers();
         diningPhilosophers.agorazein(diningPhilosophersParams);
 

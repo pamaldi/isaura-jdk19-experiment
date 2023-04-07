@@ -1,16 +1,54 @@
 package cloud.isaura.experimental.dining.philosophers;
 
 
+import cloud.isaura.experimental.channels.Channel;
+import cloud.isaura.experimental.channels.InPort;
+import cloud.isaura.experimental.channels.OutPort;
+
 public class StandardPhilosopher implements Philosopher
 {
 
-    protected StandardPhilosopher(){}
 
-    private PhilosopherAttribute philosopherAttribute;
 
-    private BlockingQueueChannel channelRequestWaiter;
+    private final Channel leftPickUpChannel;
 
-    private BlockingQueueChannel channelReleaseWaiter;
+    private final Channel rightPickUpChannel;
+
+    private final Channel leftPutDownChannel ;
+
+    private final Channel rightPutDownChannel ;
+
+    private Long thinkTime;
+
+    private Long eatTime;
+
+    private Integer cycles;
+
+    private DiningPhilosopherMonitor diningPhilosopherMonitor;
+
+    private OutPort leftPickUpChannelOut = null;
+    private OutPort rightPickUpChannelOut = null;
+    private InPort leftPutDownChannelIn = null;
+    private InPort rightPutDownChannelIn = null;
+
+    public StandardPhilosopher(Channel leftPickUpChannel, Channel rightPickUpChannel, Channel leftPutDownChannel, Channel rightPutDownChannel, Integer pos, Long thinkTime, Long eatTime, Integer cycles, DiningPhilosopherMonitor diningPhilosopherMonitor)
+    {
+        this.leftPickUpChannel = leftPickUpChannel;
+        this.rightPickUpChannel = rightPickUpChannel;
+        this.leftPutDownChannel = leftPutDownChannel;
+        this.rightPutDownChannel = rightPutDownChannel;
+        this.leftPickUpChannelOut = this.leftPickUpChannel.senderConnection();
+        this.rightPickUpChannelOut = this.rightPickUpChannel.senderConnection();
+        this.leftPutDownChannelIn = this.leftPutDownChannel.receiverConnection();
+        this.rightPutDownChannelIn = this.rightPutDownChannel.receiverConnection();
+        this.pos = pos;
+        this.thinkTime = thinkTime;
+        this.eatTime = eatTime;
+        this.cycles = cycles;
+        this.diningPhilosopherMonitor = diningPhilosopherMonitor;
+    }
+
+
 
     private Integer pos;
 
@@ -19,7 +57,7 @@ public class StandardPhilosopher implements Philosopher
     {
         System.out.println(
                 descr() + " start thinking");
-        Thread.sleep(((int) (Math.random() * philosopherAttribute.thinkTime())));
+        Thread.sleep(((int) (Math.random() * thinkTime)));
         System.out.println(
                 descr() + " end thinking");
 
@@ -31,25 +69,18 @@ public class StandardPhilosopher implements Philosopher
 
         System.out.println(
                 descr() + " start eating ");
-        this.philosopherAttribute.diningPhilosopherMonitor().startEating();
-        Thread.sleep(((int) (Math.random() * philosopherAttribute.eatTime())));
-        this.philosopherAttribute.diningPhilosopherMonitor().endEating();
+        this.diningPhilosopherMonitor.startEating();
+        Thread.sleep(((int) (Math.random() * eatTime)));
+        this.diningPhilosopherMonitor.endEating();
         System.out.println(
                 descr() + " end eating ");
-        this.philosopherAttribute.diningPhilosopherMonitor().addEatInfo(this.pos);
+        this.diningPhilosopherMonitor.addEatInfo(this.pos);
 
     }
 
-    @Override
-    public void setPhilosopherAttribute(PhilosopherAttribute philosopherAttribute)
-    {
-        this.philosopherAttribute=philosopherAttribute;
-    }
 
-    public void setChannelRequestWaiter(BlockingQueueChannel channelRequestWaiter)
-    {
-        this.channelRequestWaiter = channelRequestWaiter;
-    }
+
+
 
     private String descr()
     {
@@ -61,7 +92,7 @@ public class StandardPhilosopher implements Philosopher
     {
             System.out.println(descr());
 
-            for(int i = 0; i < philosopherAttribute.cycles();i++)
+            for(int i = 0; i < cycles;i++)
             {
                 try
                 {
@@ -73,9 +104,12 @@ public class StandardPhilosopher implements Philosopher
                 try
                 {
 
-                    this.channelRequestWaiter.send(this.pos);
+                    this.leftPickUpChannelOut.send(pos);
+                    this.rightPickUpChannelOut.send(pos);
                     eat();
-                    this.channelReleaseWaiter.send(pos);
+                    this.leftPutDownChannelIn.receive();
+                    this.rightPutDownChannelIn.receive();
+
 
                 } catch (InterruptedException e)
                 {
@@ -89,8 +123,5 @@ public class StandardPhilosopher implements Philosopher
         this.pos = pos;
     }
 
-    public void setChannelReleaseWaiter(BlockingQueueChannel channelReleaseWaiter)
-    {
-        this.channelReleaseWaiter = channelReleaseWaiter;
-    }
+
 }
