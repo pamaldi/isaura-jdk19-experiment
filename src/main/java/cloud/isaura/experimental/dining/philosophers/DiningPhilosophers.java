@@ -40,8 +40,16 @@ public class DiningPhilosophers
         IntStream.range(0, diningPhilosophersParams.numberOfPhilosophers())
                 .forEach(i ->
                     {
-                        Thread t = new Thread(this.philosophers[i]);
-                        t.start();
+                        if(diningPhilosophersParams.philosopherType().equals(PhilosopherType.GREEK))
+                        {
+                            Thread t = new Thread(this.philosophers[i]);
+                            t.start();
+                        }
+                        else if(diningPhilosophersParams.philosopherType().equals(PhilosopherType.GERMAN))
+                        {
+                            Thread.startVirtualThread(this.philosophers[i]::run);
+                        }
+
                     }
                 );
     }
@@ -51,8 +59,16 @@ public class DiningPhilosophers
         IntStream.range(0, diningPhilosophersParams.numberOfPhilosophers())
                 .forEach(i ->
                         {
-                            Thread t = new Thread(this.forks[i]);
-                            t.start();
+                            if(diningPhilosophersParams.philosopherType().equals(PhilosopherType.GREEK))
+                            {
+                                Thread t = new Thread(this.forks[i]);
+                                t.start();
+                            }
+                            else if(diningPhilosophersParams.philosopherType().equals(PhilosopherType.GERMAN))
+                            {
+                                Thread.startVirtualThread(this.forks[i]::run);
+                            }
+
                         }
                 );
     }
@@ -96,7 +112,7 @@ public class DiningPhilosophers
                 .forEach(i ->
                         {
                             int rightIndex = i+diningPhilosophersParams.numberOfPhilosophers();
-                            this.forks[i]= new Fork(this.pickUpForksChannels[i],this.putDownForksChannels[i], this.pickUpForksChannels[rightIndex],this.putDownForksChannels[rightIndex]);
+                            this.forks[i]= new Fork(this.pickUpForksChannels[i],this.putDownForksChannels[i], this.pickUpForksChannels[rightIndex],this.putDownForksChannels[rightIndex],i);
                         }
                 );
     }

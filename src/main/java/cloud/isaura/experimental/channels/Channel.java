@@ -28,12 +28,12 @@ public class Channel
                 while (!senderOk)
                     try
                     {
-                        System.out.println("Receiver  waiting for sender on channel " + id);
+                        //System.out.println("Receiver  waiting for sender on channel " + id);
                         Channel.this.wait();
                     } catch (InterruptedException e)
                     {
                     }
-                System.out.println("Receiver  received message on channel " + id);
+                //System.out.println("Receiver  received message on channel " + id);
                 msg = message;
                 senderOk = false;
                 receiverOk = false;
@@ -56,7 +56,7 @@ public class Channel
                 while (senderOk)
                     try
                     {
-                        System.out.println("Sender with message" + msg  + " waiting for receiver on channel " + id);
+                        //System.out.println("Sender with message" + msg  + " waiting for receiver on channel " + id);
                         Channel.this.wait();
                     } catch (InterruptedException e)
                     {
@@ -74,5 +74,17 @@ public class Channel
         if( receiverConnected ) throw new RuntimeException("Receiver already connected!");
         receiverConnected=true;
         return ip;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    @Override
+    public String toString()
+    {
+        return "Channel{" +
+                "id=" + id +
+                '}';
     }
 }

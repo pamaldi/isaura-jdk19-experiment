@@ -17,22 +17,25 @@ public class Fork implements    Runnable
 
     private final InPort leftPickUpChannelIn;
 
-    private final OutPort leftPutDownChannelOut;
+    private final InPort leftPutDownChannelIn;
 
     private final InPort rigthPickUpChannelIn;
 
-    private final OutPort rightPutDownChannelOut;
+    private final InPort rightPutDownChannelIn;
 
-    public Fork(Channel leftPickUpChannel, Channel leftPutDownChannel, Channel rigthPickUpChannel, Channel rightPutDownChannel)
+    private Integer pos;
+
+    public Fork(Channel leftPickUpChannel, Channel leftPutDownChannel, Channel rigthPickUpChannel, Channel rightPutDownChannel, Integer pos)
     {
         this.leftPickUpChannel = leftPickUpChannel;
         this.leftPutDownChannel = leftPutDownChannel;
         this.rigthPickUpChannel = rigthPickUpChannel;
         this.rightPutDownChannel = rightPutDownChannel;
         this.leftPickUpChannelIn = this.leftPickUpChannel.receiverConnection();
-        this.leftPutDownChannelOut = this.leftPutDownChannel.senderConnection();
+        this.leftPutDownChannelIn = this.leftPutDownChannel.receiverConnection();
         this.rigthPickUpChannelIn = this.rigthPickUpChannel.receiverConnection();
-        this.rightPutDownChannelOut = this.rightPutDownChannel.senderConnection();
+        this.rightPutDownChannelIn = this.rightPutDownChannel.receiverConnection();
+        this.pos = pos;
     }
 
 
@@ -40,12 +43,20 @@ public class Fork implements    Runnable
     @Override
     public void run()
     {
+
+        System.out.println("Fork "+pos+ ": leftPickUpChannel "+this.leftPickUpChannel+" rightPickUpChannel "+this.rigthPickUpChannel+" leftPutDownChannel "+this.leftPutDownChannel+" rightPutDownChannel "+this.rightPutDownChannel);
+
         while (true)
         {
+            //System.out.println("Fork "+pos+ ": waiting for leftPickUpChannel "+this.leftPickUpChannel);
             this.leftPickUpChannelIn.receive();
+            //System.out.println("Fork "+pos+ ": waiting for leftPutDownChannel "+this.leftPutDownChannel);
+            this.leftPutDownChannelIn.receive();
+
+            //System.out.println("Fork "+pos+ ": waiting for rightPickUpChannel "+this.rigthPickUpChannel);
             this.rigthPickUpChannelIn.receive();
-            this.leftPutDownChannelOut.send(1);
-            this.rightPutDownChannelOut.send(1);
+            //System.out.println("Fork "+pos+ ": waiting for rightPutDownChannel "+this.rightPutDownChannel);
+            this.rightPutDownChannelIn.receive();
         }
     }
 }
