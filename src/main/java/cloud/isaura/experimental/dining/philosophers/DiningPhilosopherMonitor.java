@@ -33,10 +33,14 @@ public class DiningPhilosopherMonitor
 
     public void print()
     {
-        for(int i = 0; i < numberOfPhilosophers;i++)
+        if(concurrentEating == 0)
         {
-            //System.out.println("Phil "+i+" eat "+numberOfEat[i]);
+
+            for (int i = 0; i < numberOfPhilosophers; i++)
+            {
+                System.out.println("Phil "+i+" eat "+numberOfEat[i]);
+            }
         }
-        //System.out.println("Concurrent eating:" + this.concurrentEating);
+        System.out.println("Concurrent eating:" + this.concurrentEating);
     }
 }

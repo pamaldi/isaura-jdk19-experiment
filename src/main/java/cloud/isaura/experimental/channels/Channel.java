@@ -28,7 +28,7 @@ public class Channel
                 while (!senderOk)
                     try
                     {
-                        //System.out.println("Receiver  waiting for sender on channel " + id);
+                        //System.out.println(Thread.currentThread()+" Receiver  waiting for sender on channel " + id);
                         Channel.this.wait();
                     } catch (InterruptedException e)
                     {

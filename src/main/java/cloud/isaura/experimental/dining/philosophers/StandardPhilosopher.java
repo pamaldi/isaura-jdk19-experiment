@@ -31,6 +31,8 @@ public class StandardPhilosopher implements Philosopher
     private OutPort leftPutDownChannelOut = null;
     private OutPort rightPutDownChannelOut = null;
 
+
+
     public StandardPhilosopher(Channel leftPickUpChannel, Channel rightPickUpChannel, Channel leftPutDownChannel, Channel rightPutDownChannel, Integer pos, Long thinkTime, Long eatTime, Integer cycles, DiningPhilosopherMonitor diningPhilosopherMonitor)
     {
         this.leftPickUpChannel = leftPickUpChannel;
@@ -46,6 +48,7 @@ public class StandardPhilosopher implements Philosopher
         this.eatTime = eatTime;
         this.cycles = cycles;
         this.diningPhilosopherMonitor = diningPhilosopherMonitor;
+
     }
 
 
@@ -119,6 +122,7 @@ public class StandardPhilosopher implements Philosopher
                     throw new RuntimeException(e);
                 }
             }
+            System.out.println(descr() + " finished");
     }
 
     public void setPos(Integer pos)
