@@ -1,5 +1,7 @@
 package cloud.isaura.experimental.dining.philosophers;
 
+import java.util.concurrent.locks.ReentrantLock;
+
 public class DiningPhilosopherMonitor
 {
 
@@ -9,6 +11,7 @@ public class DiningPhilosopherMonitor
 
     private int concurrentEating = 0;
 
+    private ReentrantLock lock = new ReentrantLock();
 
     public DiningPhilosopherMonitor(Integer numberOfPhilosophers)
     {
@@ -23,24 +26,21 @@ public class DiningPhilosopherMonitor
 
     public void startEating()
     {
+        this.lock.lock();
         this.concurrentEating=this.concurrentEating+1;
+        this.lock.unlock();
     }
 
     public void endEating()
     {
+        this.lock.lock();
         this.concurrentEating=this.concurrentEating-1;
+        this.lock.unlock();
     }
 
     public void print()
     {
-        if(concurrentEating == 0)
-        {
 
-            for (int i = 0; i < numberOfPhilosophers; i++)
-            {
-                System.out.println("Phil "+i+" eat "+numberOfEat[i]);
-            }
-        }
         System.out.println("Concurrent eating:" + this.concurrentEating);
     }
 }

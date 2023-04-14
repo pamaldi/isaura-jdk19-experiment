@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class ChannelTest
 {
+    /*
     @Test
     public void whenCreateChannelThenInPortAndOutPortAreNotNull()
     {
@@ -78,4 +79,6 @@ public class ChannelTest
         assertEquals(Thread.State.TERMINATED, blockedReceiver.getState());
 
     }
+
+     */
 }

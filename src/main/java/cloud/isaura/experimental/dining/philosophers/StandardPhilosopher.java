@@ -2,7 +2,6 @@ package cloud.isaura.experimental.dining.philosophers;
 
 
 import cloud.isaura.experimental.channels.Channel;
-import cloud.isaura.experimental.channels.InPort;
 import cloud.isaura.experimental.channels.OutPort;
 
 public class StandardPhilosopher implements Philosopher
@@ -26,10 +25,7 @@ public class StandardPhilosopher implements Philosopher
 
     private DiningPhilosopherMonitor diningPhilosopherMonitor;
 
-    private OutPort leftPickUpChannelOut = null;
-    private OutPort rightPickUpChannelOut = null;
-    private OutPort leftPutDownChannelOut = null;
-    private OutPort rightPutDownChannelOut = null;
+
 
 
 
@@ -39,10 +35,7 @@ public class StandardPhilosopher implements Philosopher
         this.rightPickUpChannel = rightPickUpChannel;
         this.leftPutDownChannel = leftPutDownChannel;
         this.rightPutDownChannel = rightPutDownChannel;
-        this.leftPickUpChannelOut = this.leftPickUpChannel.senderConnection();
-        this.rightPickUpChannelOut = this.rightPickUpChannel.senderConnection();
-        this.leftPutDownChannelOut = this.leftPutDownChannel.senderConnection();
-        this.rightPutDownChannelOut = this.rightPutDownChannel.senderConnection();
+
         this.pos = pos;
         this.thinkTime = thinkTime;
         this.eatTime = eatTime;
@@ -103,17 +96,17 @@ public class StandardPhilosopher implements Philosopher
                 try
                 {
                     //System.out.println(descr() + " try to grab left fork from channel "+this.leftPickUpChannel.getId());
-                    this.leftPickUpChannelOut.send(pos);
+                    this.leftPickUpChannel.send(pos);
                     //System.out.println(descr() + " grabbed left fork");
                     //System.out.println(descr() + " try to grab right fork from channel "+this.rightPickUpChannel.getId());
-                    this.rightPickUpChannelOut.send(pos);
+                    this.rightPickUpChannel.send(pos);
                     //System.out.println(descr() + " grabbed right fork");
                     eat();
                     //System.out.println(descr() + " try to put down left fork");
-                    this.leftPutDownChannelOut.send(pos);
+                    this.leftPutDownChannel.send(pos);
                     //System.out.println(descr() + " put down left fork");
                     //System.out.println(descr() + " try to put down right fork");
-                    this.rightPutDownChannelOut.send(pos);
+                    this.rightPutDownChannel.send(pos);
                     //System.out.println(descr() + " put down right fork");
 
 
@@ -122,7 +115,7 @@ public class StandardPhilosopher implements Philosopher
                     throw new RuntimeException(e);
                 }
             }
-            System.out.println(descr() + " finished");
+            //System.out.println(descr() + " finished");
     }
 
     public void setPos(Integer pos)

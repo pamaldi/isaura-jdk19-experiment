@@ -1,8 +1,5 @@
 package cloud.isaura.experimental.dining.philosophers;
 
-import cloud.isaura.experimental.channels.Channel;
-
-
 
 public class StandardWaiter implements  Runnable
 {

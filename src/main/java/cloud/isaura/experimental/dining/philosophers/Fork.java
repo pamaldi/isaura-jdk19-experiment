@@ -2,7 +2,6 @@ package cloud.isaura.experimental.dining.philosophers;
 
 import cloud.isaura.experimental.channels.Channel;
 import cloud.isaura.experimental.channels.InPort;
-import cloud.isaura.experimental.channels.OutPort;
 
 public class Fork implements    Runnable
 {
@@ -15,13 +14,7 @@ public class Fork implements    Runnable
 
     private final Channel rightPutDownChannel;
 
-    private final InPort leftPickUpChannelIn;
 
-    private final InPort leftPutDownChannelIn;
-
-    private final InPort rigthPickUpChannelIn;
-
-    private final InPort rightPutDownChannelIn;
 
     private Integer pos;
 
@@ -31,10 +24,7 @@ public class Fork implements    Runnable
         this.leftPutDownChannel = leftPutDownChannel;
         this.rigthPickUpChannel = rigthPickUpChannel;
         this.rightPutDownChannel = rightPutDownChannel;
-        this.leftPickUpChannelIn = this.leftPickUpChannel.receiverConnection();
-        this.leftPutDownChannelIn = this.leftPutDownChannel.receiverConnection();
-        this.rigthPickUpChannelIn = this.rigthPickUpChannel.receiverConnection();
-        this.rightPutDownChannelIn = this.rightPutDownChannel.receiverConnection();
+
         this.pos = pos;
     }
 
@@ -44,19 +34,22 @@ public class Fork implements    Runnable
     public void run()
     {
 
-        System.out.println("Fork "+pos+ ": leftPickUpChannel "+this.leftPickUpChannel+" rightPickUpChannel "+this.rigthPickUpChannel+" leftPutDownChannel "+this.leftPutDownChannel+" rightPutDownChannel "+this.rightPutDownChannel);
 
         while (true)
         {
+            try{
             //System.out.println("Fork "+pos+ ": waiting for leftPickUpChannel "+this.leftPickUpChannel);
-            this.leftPickUpChannelIn.receive();
+            this.leftPickUpChannel.receive();
             //System.out.println("Fork "+pos+ ": waiting for leftPutDownChannel "+this.leftPutDownChannel);
-            this.leftPutDownChannelIn.receive();
+            this.leftPutDownChannel.receive();
 
             //System.out.println("Fork "+pos+ ": waiting for rightPickUpChannel "+this.rigthPickUpChannel);
-            this.rigthPickUpChannelIn.receive();
+            this.rigthPickUpChannel.receive();
             //System.out.println("Fork "+pos+ ": waiting for rightPutDownChannel "+this.rightPutDownChannel);
-            this.rightPutDownChannelIn.receive();
+            this.rightPutDownChannel.receive();
+            }catch(Exception e){
+                e.printStackTrace();
+            }
         }
     }
 }

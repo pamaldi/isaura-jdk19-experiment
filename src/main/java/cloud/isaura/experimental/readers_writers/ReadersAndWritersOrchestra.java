@@ -13,11 +13,12 @@ public class ReadersAndWritersOrchestra
 
     public void orchestrate()
     {
+        /*
         for(int i = 0; i < 1000; i++)
         {
-            Channel channel = new Channel(Integer.valueOf(i).longValue());
-            Reader reader = new Reader(channel.receiverConnection());
-            Writer writer = new Writer(channel.senderConnection());
+            Channel channel = new Channel();
+            Reader reader = new Reader(channel);
+            Writer writer = new Writer(channel);
             if(readersWritersArgs.useVirtualThreads())
             {
                 Thread.startVirtualThread(writer);
@@ -36,7 +37,7 @@ public class ReadersAndWritersOrchestra
         while (true){
 
         }
-
+*/
 
     }
 

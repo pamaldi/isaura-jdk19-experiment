@@ -2,9 +2,8 @@ package cloud.isaura.experimental.dining.philosophers;
 
 
 
-import cloud.isaura.experimental.channels.Channel;
-
 import java.util.stream.IntStream;
+import  cloud.isaura.experimental.channels.Channel;
 
 public class DiningPhilosophers
 {
@@ -85,7 +84,7 @@ public class DiningPhilosophers
                             int leftIndex = current++;
                             int rightIndex = ( (current++) %(diningPhilosophersParams.numberOfPhilosophers()*2));
 
-                            System.out.println(" Phil "+i+" l "+leftIndex+" r "+rightIndex);
+
                             this.philosophers[i]=
                                     new StandardPhilosopher(this.pickUpForksChannels[leftIndex],this.pickUpForksChannels[rightIndex],
                                             this.putDownForksChannels[leftIndex],this.putDownForksChannels[rightIndex],i,
@@ -125,8 +124,8 @@ public class DiningPhilosophers
         IntStream.range(0, diningPhilosophersParams.numberOfPhilosophers()*2)
                 .forEach(i ->
                         {
-                            this.pickUpForksChannels[i] = new Channel(Integer.valueOf(i).longValue());
-                            this.putDownForksChannels[i] = new Channel(Integer.valueOf(i).longValue());
+                            this.pickUpForksChannels[i] = new Channel();
+                            this.putDownForksChannels[i] = new Channel();
                         }
                 );
     }

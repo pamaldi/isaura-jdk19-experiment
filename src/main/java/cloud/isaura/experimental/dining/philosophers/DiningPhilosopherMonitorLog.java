@@ -13,6 +13,7 @@ public class DiningPhilosopherMonitorLog implements Runnable
     @Override
     public void run()
     {
+        Long start = System.currentTimeMillis();
         while(true)
         {
             this.diningPhilosopherMonitor.print();
@@ -24,7 +25,7 @@ public class DiningPhilosopherMonitorLog implements Runnable
                 throw new RuntimeException(e);
             }
 
-
+            System.out.println("Elapsed time: " + (System.currentTimeMillis() - start));
         }
     }
 }
