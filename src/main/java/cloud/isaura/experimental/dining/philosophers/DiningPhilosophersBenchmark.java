@@ -2,7 +2,7 @@ package cloud.isaura.experimental.dining.philosophers;
 
 import java.util.concurrent.TimeUnit;
 
-import cloud.isaura.experimental.bench.BenchReadingTextFile;
+
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Fork;
